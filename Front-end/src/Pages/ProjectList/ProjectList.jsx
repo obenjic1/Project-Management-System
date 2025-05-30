@@ -1,10 +1,19 @@
 import React from 'react';
 import Project from './Projects';
+import { useEffect} from 'react';
+
 
 function ProjectList() {
   const [keyword, setKeyword] = React.useState('');
   const [category, setCategory] = React.useState('all');
   const [tag, setTag] = React.useState('all');
+  const [Projects,setProjects] =  React.useState([]);
+   const [items,setItems] =  React.useState([]);
+
+  
+  
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const handleFilterChange = (filterType, filterValue) => {
     console.log(filterType + ' = ' + filterValue.target.value);
@@ -12,9 +21,39 @@ function ProjectList() {
   };
   const handleSearch = (e) => {
     setKeyword(e.target.value);
-    console.log(keyword);
+  
     // Add your search logic here
   };
+  
+   useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await fetch("http://localhost:5454/api/projects", {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+
+                    const data = await response.json();
+		 setProjects(data);
+               } else {
+                                    console.error("Error fetching projects");
+                 }
+            } catch (error) {
+                console.error("Error during fetch:", error);
+            }
+        };
+
+        if (token) {
+      
+            fetchProjects();
+        }
+    }, [token]);
+  
+  
   const tags = [
     { text: 'Java', id: 'java', value: 'java' },
     { text: 'JavaScript', id: 'javascript', value: 'javascript' },
@@ -33,7 +72,7 @@ function ProjectList() {
   ];
   return (
     <>
-      <div className="d-flex px-5 relative lg:px-0 lg:flex lg:gap-5 lg:justify-content-center py-5 sticky">
+  <div className="d-flex px-5 relative lg:px-0 lg:flex lg:gap-5 lg:justify-content-center py-5 sticky">
         <section className="filterSection w-25 lg:w-1/4 ">
           <div
             style={{ height: '800px', overflow: 'auto' }}
@@ -143,12 +182,13 @@ function ProjectList() {
             </div>
             <div className="d-block">
               {keyword
-                ? [1, 1, 1].map((item) => <Project key={item} />)
-                : [1, 1, 1, 1].map((item) => <Project key={item} />)}
+                ? Projects.map((project) => <Project key={project.id} Project={Project}/>)
+                : Projects.map((project) => <Project key={project.id} Project={Project}/>)}
             </div>
           </div>
         </section>
       </div>
+   
     </>
   );
 }

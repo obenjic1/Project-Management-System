@@ -2,7 +2,9 @@ import React from 'react';
 import { Dropdown, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-function Projects() {
+function Projects({Project}) {
+
+
   const handleEdit = () => {
     alert('Edit');
   };
@@ -27,11 +29,11 @@ function Projects() {
                 className="card-title text-primary  "
                 style={{ cursor: 'pointer' }}
               >
-                Create Ecommence Website{' '}
+               {Project.id}
               </h5>
               <i className="bi bi-dot mx-4"></i>
               <h6 className="card-subtitle text-muted mx-3">
-                Category: FrontEnd
+                Category: {Project.category}
               </h6>
             </div>
 
@@ -61,8 +63,7 @@ function Projects() {
           </div>
 
           <p className="card-text">
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content. This content is a little bit longer.
+             {Project.description}
           </p>
           <p className="card-text text-lg flex flex-wrap gap-2 items center">
             <Badge bg="secondary mx-3" style={{ padding: '8px' }}>
@@ -74,7 +75,7 @@ function Projects() {
           </p>
           <p className="card-text">
             <i className="bi bi-person-circle"> </i>Created by: John Doe
-            <small className="text-muted mx-3">created Date: 3 mins ago</small>
+            <small className="text-muted mx-3">created Date:  {Project.createdDate}</small>
           </p>
         </div>
       </div>

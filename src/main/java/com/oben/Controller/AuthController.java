@@ -75,6 +75,12 @@ public class AuthController {
 	 @PostMapping("/signIn") 
 	public ResponseEntity<AuthResponse> signInHandler (@RequestBody LoginRequest loginRequest){
 		
+		 System.out.println(" i was called");
+		 System.out.println(loginRequest.getEmail());
+		 System.out.println(loginRequest.getPassword());
+
+		 
+		 
 		 String username = loginRequest.getEmail();
 		 String password = loginRequest.getPassword();
 		

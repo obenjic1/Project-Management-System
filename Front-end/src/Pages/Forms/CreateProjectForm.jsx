@@ -2,6 +2,11 @@ import { useState } from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Swal from 'sweetalert2';
+
+
+const token = localStorage.getItem("token");
+
 
 function CreateProjectForm() {
   const [selectedTags, setSelectedTags] = useState([]);
@@ -33,7 +38,7 @@ function CreateProjectForm() {
     setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleForm = (e) => {
+  const handleForm =async (e) => {
     e.preventDefault();
 
     // Gather form data directly from the form elements
@@ -49,6 +54,32 @@ function CreateProjectForm() {
     e.target.reset();
     setSelectedTags([]);
     // Add logic to handle form submission, e.g., API call
+    
+     const res = await fetch('http://localhost:5454/api/projects', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+     	 'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+    
+    const data = await res.json();
+    if (res.ok) {
+    		 await Swal.fire({
+        title: 'Good job!',
+        text: 'Project Created Successfully!',
+        icon: 'success',
+        confirmButtonText: 'Cool',
+      });
+
+      window.location.href = '/projects';
+    } else {
+      const errorMsg = data.message || 'Failed to create project';
+      Swal.fire('Error', errorMsg, 'error');
+    
+    }
+
   };
 
   return (

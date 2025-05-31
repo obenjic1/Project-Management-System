@@ -37,11 +37,12 @@ function ProjectList() {
 
                 if (response.ok) {
 
-                    const data = await response.json();
-		 setProjects(data);
-               } else {
-                                    console.error("Error fetching projects");
-                 }
+                    const data = await response.json()
+
+                    
+		setProjects(data);
+
+                } 
             } catch (error) {
                 console.error("Error during fetch:", error);
             }
@@ -182,8 +183,9 @@ function ProjectList() {
             </div>
             <div className="d-block">
               {keyword
-                ? Projects.map((project) => <Project key={project.id} Project={Project}/>)
-                : Projects.map((project) => <Project key={project.id} Project={Project}/>)}
+                ? Projects.map((project) => <Project key={project.id} Project={project}/>)
+                : Projects.map((project) => <Project key={project.id} Project={project}/>)
+                }
             </div>
           </div>
         </section>

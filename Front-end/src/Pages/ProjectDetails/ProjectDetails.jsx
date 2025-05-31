@@ -1,10 +1,47 @@
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Col, Toast, Card, Button, Badge, Modal } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import Issues from '../Issues/Issues';
 
+
 function ProjectDetails() {
+const token = localStorage.getItem("token");
+const ProjectId = localStorage.getItem("projectId");
+
+const [project,setProject]= useState([]);
+
+
+     useEffect(() => {
+        const fetchProject = async () => {
+            try {
+                const response = await fetch(`http://localhost:5454/api/projects/${ProjectId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+
+                    const data = await response.json();
+                    setProject(data);
+                    
+
+                } 
+            } catch (error) {
+                console.error("Error during fetch:", error);
+            }
+        };
+
+        if (token) {
+      
+            fetchProject();
+        }
+    }, [token]);
+
+
+
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log('Comment submitted:', e.target.comment.value);
@@ -47,11 +84,9 @@ function ProjectDetails() {
               style={{ height: '320px', overflow: 'auto' }}
             >
               <Card.Body>
-                <Card.Title> Create Ecommence Website</Card.Title>
+                <Card.Title> {project.name}</Card.Title>
                 <Card.Text>
-                  Category: FrontEnd This is a wider card with supporting text
-                  below as a natural lead-in to additional content. This content
-                  is a little bit longer.
+                 {project.description}
                 </Card.Text>
                 <div className="content">
                   <div className="leader d-inline mt-3 ">
@@ -59,14 +94,25 @@ function ProjectDetails() {
                     <span className="">
                       <label>Project Leader : </label>
                     </span>
-                    <span className="mx-2">Oben</span>
+			<span className="mx-2">
+			  {project.user?.fullName || 'Unknown'}
+			</span>
                   </div>
                   <div className="member mt-4 ">
                     {' '}
                     <span className="" style={{}}>
                       <label>Members : </label>
                     </span>
-                    <span className="mx-5 ml-4">Oben</span>
+		    {project.team && project.team.length > 0 ? (
+			  project.team.map((team, index) => (
+			    <span className="mx-5 ml-4" key={index}>
+			      {team.fullName}
+			    </span>
+			  ))
+			) : (
+			  <span className="text-muted ml-4">No team members</span>
+			)}
+
                     <span className="ml-4">
                       <button
                         type="button"
@@ -122,7 +168,7 @@ function ProjectDetails() {
                     <span className="">
                       <label>category : </label>
                     </span>
-                    <span className="mx-5">Oben</span>
+                    <span className="mx-5">{project.category}</span>
                   </div>
                   <div className="member mt-4">
                     {' '}

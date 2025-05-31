@@ -59,7 +59,7 @@ function MenuBar() {
                 style={{ color: 'white' }}
               >
                 <i
-                  class="bi bi-person-circle "
+                  className="bi bi-person-circle "
                   style={{
                     fontSize: '1rem',
                     cursor: 'pointer',
